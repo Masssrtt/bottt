@@ -6,7 +6,7 @@ from aiogram.types import Message
 from aiogram.filters import Command
 
 API_TOKEN = "7669768570:AAGoEM5v22-UXc9LdcVHpxX57V6qRIu5K6o"
-ADMIN_IDS = {1483826275, 5796861712}  # Оновлений список адміністраторів
+ADMIN_IDS = {1483826275, 5796861712, 308090114}  # Оновлений список адміністраторів
 
 # Налаштування логування
 logging.basicConfig(level=logging.INFO)
