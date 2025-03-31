@@ -35,7 +35,7 @@ async def profile(message: Message):
     user_id = str(message.from_user.id)
     username = message.from_user.username or "Без ніка"
     balance = balances.get(user_id, 0)
-    await message.reply(f"👤 Профіль: @{username}\n💰 Баланс: {balance} балів")
+    await message.reply(f"\ud83d\udc64 Профіль: @{username}\n\ud83d\udcb0 Баланс: {balance} балів")
 
 @dp.message(Command("uspr"))
 async def uspr(message: Message):
@@ -47,7 +47,7 @@ async def uspr(message: Message):
     user_id = str(message.reply_to_message.from_user.id)
     username = message.reply_to_message.from_user.username or "Без ніка"
     balance = balances.get(user_id, 0)
-    await message.reply(f"👤 @{username}\n💰 Баланс: {balance} балів")
+    await message.reply(f"\ud83d\udc64 @{username}\n\ud83d\udcb0 Баланс: {balance} балів")
 
 @dp.message(Command("plmi"))
 async def plmi(message: Message):
@@ -65,6 +65,21 @@ async def plmi(message: Message):
     balances[user_id] = balances.get(user_id, 0) + amount
     save_balances(balances)
     await message.reply(f"✅ Баланс оновлено! Новий баланс: {balances[user_id]} балів")
+
+@dp.message(Command("top"))
+async def top(message: Message):
+    top_users = sorted([(uid, bal) for uid, bal in balances.items() if bal > 0], key=lambda x: x[1], reverse=True)
+    if not top_users:
+        await message.reply("😕 Немає користувачів із ненульовим балансом.")
+        return
+    
+    top_text = "🏆 Топ користувачів:\n"
+    for i, (user_id, balance) in enumerate(top_users[:10], start=1):  # Топ-10
+        user = await bot.get_chat(int(user_id))
+        username = user.username or f"ID: {user_id}"
+        top_text += f"{i}. @{username} — {balance} балів\n"
+    
+    await message.reply(top_text)
 
 async def main():
     await bot.delete_webhook(drop_pending_updates=True)
